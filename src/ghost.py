@@ -5,8 +5,8 @@ import pygame
 from board import boards
 from search import astar, bfs, dfs, heuristic, ucs
 
-# scare_image = pygame.transform.scale(pygame.image.load('../Assets/ghost_images/powerup.png'), (45, 45))
-# dead_image = pygame.transform.scale(pygame.image.load('../Assets/ghost_images/dead.png'), (45, 45))
+# scare_image = pygame.transform.scale(pygame.image.load('../assets/ghost_images/powerup.png'), (45, 45))
+# dead_image = pygame.transform.scale(pygame.image.load('../assets/ghost_images/dead.png'), (45, 45))
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
@@ -62,7 +62,7 @@ def pixel_to_grid(x, y):
 class Ghost:
     def __init__(self, x, y, player):
         self.image = pygame.transform.scale(
-            pygame.image.load(f"../Assets/ghost_images/blue.png"), (30, 30)
+            pygame.image.load(f"./assets/ghost_images/blue.png"), (30, 30)
         )
         self.x = x
         self.y = y

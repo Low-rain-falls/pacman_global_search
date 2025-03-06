@@ -7,7 +7,7 @@ class Player:
     def __init__(self, x, y):
         self.images = [
             pygame.transform.scale(
-                pygame.image.load(f"../Assets/player_images/{i}.png"), (30, 30)
+                pygame.image.load(f"./assets/player_images/{i}.png"), (30, 30)
             )
             for i in range(1, 5)
         ]
