@@ -47,6 +47,8 @@ The goal is to develop intelligent ghost behaviors using **BFS, DFS, UCS, and A*
 1️⃣ **Install dependencies:**
 
 ```bash
+conda install --file requirements.txt
+# or
 pip install -r requirements.txt
 ```
 
