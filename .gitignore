@@ -1,1 +1,35 @@
+# Python
 __pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+.venv/
+.env
+
+# Neovim swap files
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# IDE and Editor settings
+.vscode/
+.idea/
+*.iml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+requirements.txt.lock
+
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
