@@ -16,7 +16,7 @@ def grid_to_pixel(row, col):
 
 # pixel to grid
 def pixel_to_grid(x, y):
-    return y // 30, x // 30
+    return (y // 30) % 33, (x // 30) % 30
 
 class Ghost:
     def __init__(self, x, y, image, player, id):
@@ -33,31 +33,47 @@ class Ghost:
 
     def update_path(self, new_target):
         if self.prev_target != new_target:
+            countNodes = [0]
+            tracemalloc.start()
+
+            memStart = tracemalloc.take_snapshot()
+            startTime = time.perf_counter_ns()
             if self.id == 1:
                 new_path = bfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(new_target[0], new_target[1]),
+                    countNodes
                 )
             elif self.id == 2:
                 new_path = dfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(new_target[0], new_target[1]),
-                    cur_visited=None,
+                    countNodes
                 )
             elif self.id == 3:
                 new_path = ucs(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(new_target[0], new_target[1]),
+                    countNodes
                 )
             else:
                 new_path = astar(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(new_target[0], new_target[1]),
+                    countNodes
                 )
+            endTime =  time.perf_counter_ns()
+            memEnd = tracemalloc.take_snapshot()
+            memRes = memEnd.compare_to(memStart, 'lineno')
+            self.performance.update("searchTime", (endTime - startTime) / 1000000)
+            self.performance.update("expandedNodes", countNodes[0])
+            self.performance.update("memory",  sum(stat.size for stat in memRes if "search.py" in stat.traceback[0].filename))
+            tracemalloc.stop()
+            self.performance.printPer(self.id)
             if new_path != self.path:
                 self.path = new_path
             self.prev_target = new_target
