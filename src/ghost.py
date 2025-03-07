@@ -34,7 +34,7 @@ class Ghost:
         if self.prev_target != new_target:
             countNodes = [0]
             startTime = time.perf_counter_ns()
-            new_path = bfs(
+            new_path = astar(
                 boards,
                 pixel_to_grid(self.x, self.y),
                 pixel_to_grid(new_target[0], new_target[1]),

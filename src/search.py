@@ -66,7 +66,7 @@ def bfs(boards, start, end, countNodes):
     return None
 
 # ucs search
-def ucs(boards, start, end):
+def ucs(boards, start, end, countNodes):
     rows, cols = len(boards), len(boards[0])
     pq = [(0, start)]
     parent = {}
@@ -75,7 +75,7 @@ def ucs(boards, start, end):
 
     while pq:
         cur_cost, (x, y) = heapq.heappop(pq)
-
+        countNodes[0] += 1
         if (x, y) in visited:
             continue
         visited.add((x, y))
@@ -105,7 +105,7 @@ def ucs(boards, start, end):
 def heuristic (a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-def astar(boards, start, end):
+def astar(boards, start, end, countNodes):
     rows, cols = len(boards), len(boards[0])
     pq = [(0, start)]
     parent = {}
@@ -115,7 +115,7 @@ def astar(boards, start, end):
 
     while pq:
         cur_cost, (x, y) = heapq.heappop(pq)
-
+        countNodes[0] += 1
         if (x, y) in visited:
             continue
         visited.add((x, y))
