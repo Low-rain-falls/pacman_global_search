@@ -32,14 +32,17 @@ class Ghost:
 
     def update_path(self, new_target):
         if self.prev_target != new_target:
+            countNodes = [0]
             startTime = time.perf_counter_ns()
-            new_path = dfs(
+            new_path = bfs(
                 boards,
                 pixel_to_grid(self.x, self.y),
                 pixel_to_grid(new_target[0], new_target[1]),
+                countNodes
             )
             endTime =  time.perf_counter_ns()
             self.performance.update("searchTime", (endTime - startTime) / 1000000)
+            self.performance.update("expandedNodes", countNodes[0])
             self.performance.printPer()
             if new_path != self.path:
                 self.path = new_path

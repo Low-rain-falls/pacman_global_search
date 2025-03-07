@@ -13,7 +13,7 @@ def print_board_with_path(board, path):
         print("   ".join(str(cell) for cell in row))
 
 # dfs search
-def dfs(boards, start, goal, cur_visited = None):
+def dfs(boards, start, goal, countNodes, cur_visited = None):
     # initial current visited
     if cur_visited is None:
         cur_visited = set()
@@ -24,21 +24,21 @@ def dfs(boards, start, goal, cur_visited = None):
 
     # update current_visited
     cur_visited.add((start[0], start[1]))
-
+    countNodes[0] += 1
     cols = len(boards[0])
 
     # check path
     for dx, dy in direction:
         nx, ny = start[0] + dx, start[1] + dy 
         if 0 <= ny < cols and boards[nx][ny] <= 2 and (nx, ny) not in cur_visited:
-            path = dfs(boards, (nx, ny), goal, cur_visited)
+            path = dfs(boards, (nx, ny), goal, countNodes, cur_visited)
             if path:
                 return [(start[0], start[1])] + path
     cur_visited.remove((start[0], start[1]))
     return None
 
 # bfs search
-def bfs(boards, start, end):
+def bfs(boards, start, end, countNodes):
     cols = len(boards[0])
 
     # queue has child and their path
@@ -46,6 +46,7 @@ def bfs(boards, start, end):
     # check visited
     visited = set()
     visited.add(start)
+    countNodes[0] += 1
     
     while queue:
         (x, y), path = queue.pop(0)
@@ -60,6 +61,8 @@ def bfs(boards, start, end):
                 if boards[nx][ny] <= 2:
                     queue.append(((nx, ny), path + [(nx, ny)]))
                     visited.add((nx, ny))
+                    countNodes[0] += 1
+
     return None
 
 # ucs search
