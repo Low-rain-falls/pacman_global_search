@@ -29,7 +29,7 @@ def dfs(boards, start, goal, countNodes, cur_visited = None):
 
     # check path
     for dx, dy in direction:
-        nx, ny = start[0] + dx, start[1] + dy 
+        nx, ny = start[0] + dx, start[1] + dy
         if 0 <= ny < cols and boards[nx][ny] <= 2 and (nx, ny) not in cur_visited:
             path = dfs(boards, (nx, ny), goal, countNodes, cur_visited)
             if path:
