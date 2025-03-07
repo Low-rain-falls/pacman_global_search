@@ -1,22 +1,25 @@
-
-import pygame
 import heapq
 
-from search import ucs, dfs, bfs, astar, heuristic
-from board import boards
+import pygame
 
-# scare_image = pygame.transform.scale(pygame.image.load('../Assets/ghost_images/powerup.png'), (45, 45))
-# dead_image = pygame.transform.scale(pygame.image.load('../Assets/ghost_images/dead.png'), (45, 45))
+from board import boards
+from search import astar, bfs, dfs, heuristic, ucs
+
+# scare_image = pygame.transform.scale(pygame.image.load('./assets/ghost_images/powerup.png'), (45, 45))
+# dead_image = pygame.transform.scale(pygame.image.load('./assets/ghost_images/dead.png'), (45, 45))
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
 
 # grid to pixel
 def grid_to_pixel(row, col):
     return col * 30, row * 30
 
-#pixel to grid
+
+# pixel to grid
 def pixel_to_grid(x, y):
     return y // 30, x // 30
+
 
 class Ghost:
     def __init__(self, x, y, image, player, id):
@@ -33,22 +36,39 @@ class Ghost:
     def update_path(self, new_target):
         if self.prev_target != new_target:
             if self.id == 1:
-                new_path = bfs(boards, pixel_to_grid(self.x, self.y), pixel_to_grid(new_target[0], new_target[1]))
+                new_path = bfs(
+                    boards,
+                    pixel_to_grid(self.x, self.y),
+                    pixel_to_grid(new_target[0], new_target[1]),
+                )
             elif self.id == 2:
-                new_path = dfs(boards, pixel_to_grid(self.x, self.y), pixel_to_grid(new_target[0], new_target[1]), cur_visited=None)
+                new_path = dfs(
+                    boards,
+                    pixel_to_grid(self.x, self.y),
+                    pixel_to_grid(new_target[0], new_target[1]),
+                    cur_visited=None,
+                )
             elif self.id == 3:
-                new_path = ucs(boards, pixel_to_grid(self.x, self.y), pixel_to_grid(new_target[0], new_target[1]))
+                new_path = ucs(
+                    boards,
+                    pixel_to_grid(self.x, self.y),
+                    pixel_to_grid(new_target[0], new_target[1]),
+                )
             else:
-                new_path = astar(boards, pixel_to_grid(self.x, self.y), pixel_to_grid(new_target[0], new_target[1]))
+                new_path = astar(
+                    boards,
+                    pixel_to_grid(self.x, self.y),
+                    pixel_to_grid(new_target[0], new_target[1]),
+                )
             if new_path != self.path:
                 self.path = new_path
             self.prev_target = new_target
 
     def move(self):
-        if self.can_move: 
+        if self.can_move:
             if not self.path:
                 return
-            
+
             cur_x, cur_y = self.path[0]
             target_x, target_y = grid_to_pixel(cur_x, cur_y)
 

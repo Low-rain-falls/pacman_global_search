@@ -1,8 +1,8 @@
 import pygame
 
+from board import boards
 # import objects
 from ghost import Ghost
-from board import boards
 from player import Player
 
 pygame.init()
@@ -29,17 +29,26 @@ game_board = boards
 # player object
 player = Player(450, 720)
 
-#ghost object
-blue_image = pygame.transform.scale(pygame.image.load(f'../Assets/ghost_images/blue.png'), (30, 30))
-orange_image = pygame.transform.scale(pygame.image.load(f'../Assets/ghost_images/orange.png'), (30, 30))
-pink_image = pygame.transform.scale(pygame.image.load(f'../Assets/ghost_images/pink.png'), (30, 30))
-red_image = pygame.transform.scale(pygame.image.load(f'../Assets/ghost_images/red.png'), (30, 30))
+# ghost object
+blue_image = pygame.transform.scale(
+    pygame.image.load(f"./assets/ghost_images/blue.png"), (30, 30)
+)
+orange_image = pygame.transform.scale(
+    pygame.image.load(f"./assets/ghost_images/orange.png"), (30, 30)
+)
+pink_image = pygame.transform.scale(
+    pygame.image.load(f"./assets/ghost_images/pink.png"), (30, 30)
+)
+red_image = pygame.transform.scale(
+    pygame.image.load(f"./assets/ghost_images/red.png"), (30, 30)
+)
 ghosts = [
     Ghost(60, 60, blue_image, player, 1),
     Ghost(810, 60, orange_image, player, 2),
     Ghost(60, 900, pink_image, player, 3),
     Ghost(810, 900, red_image, player, 4),
 ]
+
 
 # functions
 # draw game board function
@@ -55,9 +64,17 @@ def draw_board(game_board):
                 case 1:
                     pygame.draw.circle(window, WHITE, ((j + 0.5) * x, (i + 0.5) * y), 4)
                 case 2:
-                    pygame.draw.circle(window, WHITE, ((j + 0.5) * x, (i + 0.5) * y), 10)
+                    pygame.draw.circle(
+                        window, WHITE, ((j + 0.5) * x, (i + 0.5) * y), 10
+                    )
                 case 3:
-                    pygame.draw.line(window, BLUE, ((j + 0.5) * x, i * y), ((j + 0.5) * x, i * y + y), 3,)
+                    pygame.draw.line(
+                        window,
+                        BLUE,
+                        ((j + 0.5) * x, i * y),
+                        ((j + 0.5) * x, i * y + y),
+                        3,
+                    )
                 case 4:
                     pygame.draw.line(
                         window,
@@ -115,13 +132,19 @@ def draw_board(game_board):
                         2 * PI,
                         3,
                     )
+
+
 # draw status function
 def draw_status(player):
-    score_text = font.render(f'Score: {player.score}', True, WHITE)
+    score_text = font.render(f"Score: {player.score}", True, WHITE)
     window.blit(score_text, (10, 990))
 
     for i in range(player.life):
-        window.blit(pygame.transform.scale(player.images[0], (30, 30)), (650 + i * 40, 985))
+        window.blit(
+            pygame.transform.scale(player.images[0], (30, 30)), (650 + i * 40, 985)
+        )
+
+
 # main game function
 def main():
     run = True
@@ -133,7 +156,7 @@ def main():
         draw_board(game_board)
         draw_status(player)
 
-        #player actions
+        # player actions
         player.draw_player(window)
         player.update()
         player.move()
@@ -141,7 +164,7 @@ def main():
         for ghost in ghosts:
             player.check_collision(ghost)
 
-        #ghost actions
+        # ghost actions
         new_target = (player.x, player.y)
         for ghost in ghosts:
             ghost.draw_ghost(window)
@@ -155,42 +178,41 @@ def main():
                 #  and player.x % 30 == 0 and player.y % 30 == 0
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    player.can_move = True 
+                    player.can_move = True
                     for ghost in ghosts:
                         ghost.can_move = True
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    if (player.direction == 0 or player.direction == 1): 
+                    if player.direction == 0 or player.direction == 1:
                         player.set_direction(0)
-                    elif (player.direction == 2 or player.direction == 3):
+                    elif player.direction == 2 or player.direction == 3:
                         promise[0] = True
                         promise[1] = False
                         promise[2] = False
                         promise[3] = False
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    if (player.direction == 0 or player.direction == 1): 
+                    if player.direction == 0 or player.direction == 1:
                         player.set_direction(1)
-                    elif (player.direction == 2 or player.direction == 3):
+                    elif player.direction == 2 or player.direction == 3:
                         promise[1] = True
                         promise[0] = False
                         promise[2] = False
                         promise[3] = False
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
-                    if (player.direction == 2 or player.direction == 3): 
+                    if player.direction == 2 or player.direction == 3:
                         player.set_direction(2)
-                    elif (player.direction == 0 or player.direction == 1):
+                    elif player.direction == 0 or player.direction == 1:
                         promise[2] = True
                         promise[0] = False
                         promise[1] = False
                         promise[3] = False
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    if (player.direction == 2 or player.direction == 3): 
+                    if player.direction == 2 or player.direction == 3:
                         player.set_direction(3)
-                    elif (player.direction == 0 or player.direction == 1):
+                    elif player.direction == 0 or player.direction == 1:
                         promise[3] = True
                         promise[0] = False
                         promise[1] = False
                         promise[2] = False
-        
 
         if promise[0] and player.x % 30 == 0 and player.y % 30 == 0:
             player.set_direction(0)
@@ -208,5 +230,7 @@ def main():
 
     pygame.quit()
 
+
 if __name__ == "__main__":
     main()
+

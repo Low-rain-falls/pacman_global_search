@@ -1,9 +1,16 @@
 import pygame
+
 from board import boards
+
 
 class Player:
     def __init__(self, x, y):
-        self.images = [pygame.transform.scale(pygame.image.load(f'../Assets/player_images/{i}.png'), (30, 30)) for i in range(1, 5)]
+        self.images = [
+            pygame.transform.scale(
+                pygame.image.load(f"./assets/player_images/{i}.png"), (30, 30)
+            )
+            for i in range(1, 5)
+        ]
         self.x = x
         self.y = y
         self.can_move = False
@@ -18,11 +25,20 @@ class Player:
         if self.direction == 0:
             window.blit(self.images[self.counter // 5], (self.x, self.y))
         elif self.direction == 1:
-            window.blit(pygame.transform.rotate(self.images[self.counter // 5], 180), (self.x, self.y))
+            window.blit(
+                pygame.transform.rotate(self.images[self.counter // 5], 180),
+                (self.x, self.y),
+            )
         elif self.direction == 2:
-            window.blit(pygame.transform.rotate(self.images[self.counter // 5], 90), (self.x, self.y))
+            window.blit(
+                pygame.transform.rotate(self.images[self.counter // 5], 90),
+                (self.x, self.y),
+            )
         elif self.direction == 3:
-            window.blit(pygame.transform.rotate(self.images[self.counter // 5], -90), (self.x, self.y))
+            window.blit(
+                pygame.transform.rotate(self.images[self.counter // 5], -90),
+                (self.x, self.y),
+            )
 
     def update(self):
         if self.counter < 19:
@@ -67,4 +83,4 @@ class Player:
             if self.x == ghost.x and self.y == ghost.y:
                 self.can_move == False
                 self.life -= 1
-            
+
