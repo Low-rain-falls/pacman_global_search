@@ -1,12 +1,10 @@
-import heapq
-
 import pygame
+import time
+import tracemalloc
 
 from board import boards
 from search import astar, bfs, dfs, heuristic, ucs
-
-# scare_image = pygame.transform.scale(pygame.image.load('./assets/ghost_images/powerup.png'), (45, 45))
-# dead_image = pygame.transform.scale(pygame.image.load('./assets/ghost_images/dead.png'), (45, 45))
+from performance import Performance
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
@@ -20,7 +18,6 @@ def grid_to_pixel(row, col):
 def pixel_to_grid(x, y):
     return y // 30, x // 30
 
-
 class Ghost:
     def __init__(self, x, y, image, player, id):
         self.image = image
@@ -32,6 +29,7 @@ class Ghost:
         self.prev_target = None
         self.speed = 2
         self.path = []
+        self.performance = Performance()
 
     def update_path(self, new_target):
         if self.prev_target != new_target:
