@@ -18,6 +18,7 @@ class Player:
         self.counter = 0
         self.score = 0
         self.life = 3
+        self.powerup = False
 
     def draw_player(self, window):
         # 0 - right, 1 - left, 2 - up, 3 - down
@@ -76,3 +77,10 @@ class Player:
         elif boards[(self.y // 30) % 33][(self.x // 30) % 30] == 2:
             boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
             self.score += 20
+
+    def check_collision(self, ghost):
+        if not self.powerup:
+            if self.x == ghost.x and self.y == ghost.y:
+                self.can_move == False
+                self.life -= 1
+
