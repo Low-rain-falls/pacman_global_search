@@ -15,4 +15,4 @@ class Performance:
     
     # print curent
     def printPer(self):
-        print(f"Searching time: {self.searchTime}ms, memory used: {self.memory}, expanded nodes: {self.expandedNodes}")
+        print(f"Searching time: {self.searchTime}ms, memory used: {self.memory} bytes, expanded nodes: {self.expandedNodes} nodes")

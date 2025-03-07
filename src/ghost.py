@@ -1,5 +1,6 @@
 import pygame
 import time
+import tracemalloc
 
 from board import boards
 from search import astar, bfs, dfs, heuristic, ucs
@@ -33,16 +34,23 @@ class Ghost:
     def update_path(self, new_target):
         if self.prev_target != new_target:
             countNodes = [0]
+            tracemalloc.start()
+
+            memStart = tracemalloc.take_snapshot()
             startTime = time.perf_counter_ns()
-            new_path = astar(
+            new_path = dfs(
                 boards,
                 pixel_to_grid(self.x, self.y),
                 pixel_to_grid(new_target[0], new_target[1]),
                 countNodes
             )
             endTime =  time.perf_counter_ns()
+            memEnd = tracemalloc.take_snapshot()
+            memRes = memEnd.compare_to(memStart, 'lineno')
             self.performance.update("searchTime", (endTime - startTime) / 1000000)
             self.performance.update("expandedNodes", countNodes[0])
+            self.performance.update("memory",  sum(stat.size for stat in memRes))
+            tracemalloc.stop()
             self.performance.printPer()
             if new_path != self.path:
                 self.path = new_path
