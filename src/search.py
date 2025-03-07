@@ -1,5 +1,4 @@
 import heapq
-from board import boards
 
 # left - right - top - down
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
