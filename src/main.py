@@ -143,7 +143,9 @@ def draw_status(player):
         window.blit(
             pygame.transform.scale(player.images[0], (30, 30)), (650 + i * 40, 985)
         )
-
+    
+    if player.powerup:
+        pygame.draw.circle(window, BLUE, (150, 1000), 10)
 
 # main game function
 def main():
@@ -160,7 +162,6 @@ def main():
         player.draw_player(window)
         player.update()
         player.move()
-        player.cal_score()
         for ghost in ghosts:
             player.check_collision(ghost)
 

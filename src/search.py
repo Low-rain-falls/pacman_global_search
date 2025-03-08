@@ -30,7 +30,7 @@ def dfs(boards, start, goal, countNodes, cur_visited = None):
     # check path
     for dx, dy in direction:
         nx, ny = start[0] + dx, start[1] + dy
-        if 0 <= ny < cols and boards[nx][ny] <= 2 and (nx, ny) not in cur_visited:
+        if 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9} and (nx, ny) not in cur_visited:
             path = dfs(boards, (nx, ny), goal, countNodes, cur_visited)
             if path:
                 return [(start[0], start[1])] + path
@@ -58,7 +58,7 @@ def bfs(boards, start, end, countNodes):
             nx, ny = x + dx, y + dy
             
             if 0 <= ny < cols and (nx, ny) not in visited:
-                if boards[nx][ny] <= 2:
+                if boards[nx][ny] in {0, 1, 2, 9}:
                     queue.append(((nx, ny), path + [(nx, ny)]))
                     visited.add((nx, ny))
                     countNodes[0] += 1
@@ -92,7 +92,7 @@ def ucs(boards, start, end, countNodes):
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] <= 2:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9}:
                 new_cost = cur_cost + 1
 
                 if (nx, ny) not in cost or new_cost < cost[(nx, ny)]:
@@ -132,7 +132,7 @@ def astar(boards, start, end, countNodes):
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] <= 2:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9}:
                 new_cost = f_score[(x, y)] + 1
 
                 if (nx, ny) not in f_score or new_cost < f_score[(nx, ny)]:

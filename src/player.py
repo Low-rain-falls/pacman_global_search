@@ -19,6 +19,7 @@ class Player:
         self.score = 0
         self.life = 3
         self.powerup = False
+        self.powerup_counter = 0
 
     def draw_player(self, window):
         # 0 - right, 1 - left, 2 - up, 3 - down
@@ -45,6 +46,8 @@ class Player:
             self.counter += 1
         else:
             self.counter = 0
+        self.cal_score()
+        self.cal_powerup_time()
 
     def set_direction(self, direction):
         self.direction = direction
@@ -77,10 +80,18 @@ class Player:
         elif boards[(self.y // 30) % 33][(self.x // 30) % 30] == 2:
             boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
             self.score += 20
+            self.powerup = True
+            self.powerup_counter = 0
 
     def check_collision(self, ghost):
         if not self.powerup:
             if self.x == ghost.x and self.y == ghost.y:
                 self.can_move == False
                 self.life -= 1
-
+    
+    def cal_powerup_time(self):
+        if self.powerup and self.powerup_counter < 600:
+            self.powerup_counter += 1
+        elif self.powerup and self.powerup_counter >= 600:
+            self.powerup = False
+            self.powerup_counter = 0
