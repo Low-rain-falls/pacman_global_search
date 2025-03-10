@@ -3,7 +3,7 @@ import time
 import tracemalloc
 
 from board import boards
-from search import astar, bfs, dfs, heuristic, ucs
+from search import astar, bfs, dfs, ucs
 from performance import Performance
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -25,7 +25,7 @@ class Ghost:
         self.y = y
         self.player = player
         self.id = id
-        self.can_move = False
+        self.can_move = True
         self.prev_target = None
         self.speed = 2
         self.path = []

@@ -13,7 +13,7 @@ class Player:
         ]
         self.x = x
         self.y = y
-        self.can_move = False
+        self.can_move = True
         self.direction = 1
         self.counter = 0
         self.score = 0

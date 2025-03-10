@@ -147,6 +147,7 @@ def draw_status(player):
     if player.powerup:
         pygame.draw.circle(window, BLUE, (150, 1000), 10)
 
+
 # main game function
 def main():
     run = True
@@ -178,10 +179,10 @@ def main():
                 run = False
                 #  and player.x % 30 == 0 and player.y % 30 == 0
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    player.can_move = True
-                    for ghost in ghosts:
-                        ghost.can_move = True
+                # if event.key == pygame.K_SPACE:
+                #     player.can_move = True
+                #     for ghost in ghosts:
+                #         ghost.can_move = True
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     if player.direction == 0 or player.direction == 1:
                         player.set_direction(0)
