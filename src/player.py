@@ -50,6 +50,8 @@ class Player:
         self.direction = direction
 
     def move(self):
+        boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
+
         if self.can_move:
             if self.x > 900:
                 self.x = -30
@@ -57,23 +59,30 @@ class Player:
                 self.x = 900
 
             speed = 2
-            if self.direction == 0:
-                if boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3:
-                    self.x += speed
-            elif self.direction == 1:
-                if boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] < 3:
-                    self.x -= speed
-            elif self.direction == 2:
-                if boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] < 3:
-                    self.y -= speed
-            elif self.direction == 3:
-                if boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3:
-                    self.y += speed
+            
+            if (self.direction == 0 and 
+                boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3):
+                self.x += speed
+
+            elif (self.direction == 1 and 
+                  boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] < 3):
+                self.x -= speed
+
+            elif (self.direction == 2 and 
+                  boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] < 3):
+                self.y -= speed
+
+            elif (self.direction == 3 and
+                  boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3):
+                self.y += speed
+        boards[(self.y // 30) % 33][(self.x // 30) % 30] = 10        
+
 
     def cal_score(self):
         if boards[(self.y // 30) % 33][(self.x // 30) % 30] == 1:
             boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
             self.score += 5
+            
         elif boards[(self.y // 30) % 33][(self.x // 30) % 30] == 2:
             boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
             self.score += 20

@@ -1,9 +1,11 @@
 import pygame
 
-from board import boards
+
 # import objects
+from board import boards
 from ghost import Ghost
 from player import Player
+from search import astar, bfs, dfs, ucs
 
 pygame.init()
 
@@ -27,7 +29,7 @@ font = pygame.font.Font("freesansbold.ttf", 20)
 game_board = boards
 
 # player object
-player = Player(450, 720)
+player = Player(450, 720) #  col: 15, row: 24
 
 # ghost object
 blue_image = pygame.transform.scale(
@@ -43,10 +45,10 @@ red_image = pygame.transform.scale(
     pygame.image.load(f"./assets/ghost_images/red.png"), (30, 30)
 )
 ghosts = [
-    Ghost(60, 60, blue_image, player, 1),
-    Ghost(810, 60, orange_image, player, 2),
-    Ghost(60, 900, pink_image, player, 3),
-    Ghost(810, 900, red_image, player, 4),
+    # Ghost(90, 60, blue_image, 1, bfs), 
+    # Ghost(810, 60, orange_image, 2, dfs),
+    # Ghost(60, 900, pink_image, 3, ucs),
+    Ghost(810, 900, red_image, 4, astar),
 ]
 
 
@@ -164,8 +166,9 @@ def main():
         for ghost in ghosts:
             player.check_collision(ghost)
 
+
         # ghost actions
-        new_target = (player.x, player.y)
+        new_target = (player.y, player.x)
         for ghost in ghosts:
             ghost.draw_ghost(window)
             ghost.update_path(new_target)
@@ -186,33 +189,25 @@ def main():
                         player.set_direction(0)
                     elif player.direction == 2 or player.direction == 3:
                         promise[0] = True
-                        promise[1] = False
-                        promise[2] = False
-                        promise[3] = False
+                        promise[1] = promise[2] = promise[3] = False
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     if player.direction == 0 or player.direction == 1:
                         player.set_direction(1)
                     elif player.direction == 2 or player.direction == 3:
                         promise[1] = True
-                        promise[0] = False
-                        promise[2] = False
-                        promise[3] = False
+                        promise[0] = promise[2] = promise[3] = False
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     if player.direction == 2 or player.direction == 3:
                         player.set_direction(2)
                     elif player.direction == 0 or player.direction == 1:
                         promise[2] = True
-                        promise[0] = False
-                        promise[1] = False
-                        promise[3] = False
+                        promise[0] = promise[1] = promise[3] = False
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     if player.direction == 2 or player.direction == 3:
                         player.set_direction(3)
                     elif player.direction == 0 or player.direction == 1:
                         promise[3] = True
-                        promise[0] = False
-                        promise[1] = False
-                        promise[2] = False
+                        promise[0] = promise[1] = promise[2] = False
 
         if promise[0] and player.x % 30 == 0 and player.y % 30 == 0:
             player.set_direction(0)
@@ -226,11 +221,13 @@ def main():
         elif promise[3] and player.x % 30 == 0 and player.y % 30 == 0:
             player.set_direction(3)
             promise[3] = False
+
         pygame.display.flip()
 
     pygame.quit()
 
 
 if __name__ == "__main__":
+
     main()
 
