@@ -13,28 +13,48 @@ def print_board_with_path(board, path):
         print("   ".join(str(cell) for cell in row))
 
 # dfs search
-def dfs(boards, start, goal, countNodes, cur_visited = None):
-    # initial current visited
-    if cur_visited is None:
-        cur_visited = set()
+# def dfs(boards, start, goal, countNodes, cur_visited = None):
+#     # initial current visited
+#     if cur_visited is None:
+#         cur_visited = set()
 
-    # return goal
-    if start == goal:
-        return [start]
+#     # return goal
+#     if start == goal:
+#         return [start]
 
-    # update current_visited
-    cur_visited.add((start[0], start[1]))
-    countNodes[0] += 1
+#     # update current_visited
+#     cur_visited.add((start[0], start[1]))
+#     countNodes[0] += 1
+#     cols = len(boards[0])
+
+#     # check path
+#     for dx, dy in direction:
+#         nx, ny = start[0] + dx, start[1] + dy
+#         if 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9} and (nx, ny) not in cur_visited:
+#             path = dfs(boards, (nx, ny), goal, countNodes, cur_visited)
+#             if path:
+#                 return [(start[0], start[1])] + path
+#     cur_visited.remove((start[0], start[1]))
+#     return None
+def dfs(boards, start, goal, countNodes):
     cols = len(boards[0])
+    stack = [(start, [start])]
+    visited = set()
 
-    # check path
-    for dx, dy in direction:
-        nx, ny = start[0] + dx, start[1] + dy
-        if 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9} and (nx, ny) not in cur_visited:
-            path = dfs(boards, (nx, ny), goal, countNodes, cur_visited)
-            if path:
-                return [(start[0], start[1])] + path
-    cur_visited.remove((start[0], start[1]))
+    while stack:
+        (x, y), path = stack.pop()
+        if (x, y) == goal:
+            return path
+
+        if (x, y) in visited:
+            continue
+        visited.add((x, y))
+        countNodes[0] += 1
+
+        for dx, dy in direction:
+            nx, ny = x + dx, y + dy
+            if 0 <= ny < cols and (nx, ny) not in visited and boards[nx][ny] in {0, 1, 2, 9}:
+                stack.append(((nx, ny), path + [(nx, ny)]))
     return None
 
 # bfs search

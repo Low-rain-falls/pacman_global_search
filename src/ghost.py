@@ -7,7 +7,12 @@ from search import astar, bfs, dfs, ucs
 from performance import Performance
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
+scared_image = pygame.transform.scale(
+    pygame.image.load(f"./assets/ghost_images/powerup.png"), (30, 30)
+)
+dead_image = pygame.transform.scale(
+    pygame.image.load(f"./assets/ghost_images/dead.png"), (30, 30)
+)
 
 # grid to pixel
 def grid_to_pixel(row, col):
@@ -19,17 +24,19 @@ def pixel_to_grid(x, y):
     return (y // 30) % 33, (x // 30) % 30
 
 class Ghost:
-    def __init__(self, x, y, image, player, id):
+    def __init__(self, x, y, image, id):
         self.image = image
         self.x = x
         self.y = y
-        self.player = player
         self.id = id
-        self.can_move = True
+        self.can_move = False
         self.prev_target = None
-        self.speed = 2
         self.path = []
+        self.can_be_eaten = False
+        self.dead = False
         self.performance = Performance()
+
+        self.spawn_x, self.spawn_y = x, y
 
     def update_path(self, new_target):
         if self.prev_target != new_target:
@@ -38,7 +45,14 @@ class Ghost:
 
             memStart = tracemalloc.take_snapshot()
             startTime = time.perf_counter_ns()
-            if self.id == 1:
+            if self.dead:
+                new_path = ucs(
+                    boards,
+                    pixel_to_grid(self.x, self.y),
+                    pixel_to_grid(self.spawn_x, self.spawn_y),
+                    countNodes
+                )
+            elif self.id == 1:
                 new_path = bfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
@@ -46,6 +60,12 @@ class Ghost:
                     countNodes
                 )
             elif self.id == 2:
+                # new_path = dfs(
+                #     boards,
+                #     pixel_to_grid(self.x, self.y),
+                #     pixel_to_grid(new_target[0], new_target[1]),
+                #     countNodes
+                # )
                 new_path = dfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
@@ -66,6 +86,7 @@ class Ghost:
                     pixel_to_grid(new_target[0], new_target[1]),
                     countNodes
                 )
+
             endTime =  time.perf_counter_ns()
             memEnd = tracemalloc.take_snapshot()
             memRes = memEnd.compare_to(memStart, 'lineno')
@@ -86,18 +107,26 @@ class Ghost:
             cur_x, cur_y = self.path[0]
             target_x, target_y = grid_to_pixel(cur_x, cur_y)
 
+            speed = 2
             if self.x < target_x:
-                self.x += self.speed
+                self.x += speed
             elif self.x > target_x:
-                self.x -= self.speed
+                self.x -= speed
 
             if self.y < target_y:
-                self.y += self.speed
+                self.y += speed
             elif self.y > target_y:
-                self.y -= self.speed
+                self.y -= speed
 
             if self.x == target_x and self.y == target_y:
                 self.path.pop(0)
-
+            if self.x == self.spawn_x and self.y == self.spawn_y:
+                self.dead = False
+            
     def draw_ghost(self, window):
-        window.blit(self.image, (self.x, self.y))
+        if self.dead:
+            window.blit(dead_image, (self.x, self.y))
+        elif self.can_be_eaten:
+            window.blit(scared_image, (self.x, self.y))
+        else:
+            window.blit(self.image, (self.x, self.y))
