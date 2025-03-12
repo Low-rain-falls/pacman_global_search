@@ -19,6 +19,7 @@ class Player:
         self.score = 0
         self.life = 3
         self.powerup = False
+        self.powerup_counter = 0
 
     def draw_player(self, window):
         # 0 - right, 1 - left, 2 - up, 3 - down
@@ -40,11 +41,13 @@ class Player:
                 (self.x, self.y),
             )
 
-    def update(self):
+    def update(self, ghosts):
         if self.counter < 19:
             self.counter += 1
         else:
             self.counter = 0
+        self.cal_score(ghosts)
+        self.cal_powerup_time(ghosts)
 
     def set_direction(self, direction):
         self.direction = direction
@@ -70,17 +73,33 @@ class Player:
                 if boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3:
                     self.y += speed
 
-    def cal_score(self):
+    def cal_score(self, ghosts):
         if boards[(self.y // 30) % 33][(self.x // 30) % 30] == 1:
             boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
             self.score += 5
         elif boards[(self.y // 30) % 33][(self.x // 30) % 30] == 2:
             boards[(self.y // 30) % 33][(self.x // 30) % 30] = 0
             self.score += 20
+            self.powerup = True
+            self.powerup_counter = 0
+            for ghost in ghosts:
+                ghost.can_be_eaten = True
 
     def check_collision(self, ghost):
-        if not self.powerup:
-            if self.x == ghost.x and self.y == ghost.y:
-                self.can_move == False
+        if self.x == ghost.x and self.y == ghost.y:
+            if not self.powerup:
+                self.can_move = False
                 self.life -= 1
-
+            elif self.powerup and ghost.can_be_eaten:
+                ghost.dead = True
+                ghost.can_be_eaten = False
+                self.score += 200
+    
+    def cal_powerup_time(self, ghosts):
+        if self.powerup and self.powerup_counter < 600:
+            self.powerup_counter += 1
+        elif self.powerup and self.powerup_counter >= 600:
+            self.powerup = False
+            self.powerup_counter = 0
+            for ghost in ghosts:
+                ghost.can_be_eaten = False

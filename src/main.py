@@ -1,7 +1,9 @@
 import pygame
+import threading
 
-from board import boards
+
 # import objects
+from board import boards
 from ghost import Ghost
 from player import Player
 
@@ -12,10 +14,20 @@ width = 900
 height = 1040
 PI = 3.14159265358979323846264338327950288419716939937510
 
+# button
+BUTTON_WIDTH = 200
+BUTTON_HEIGHT = 100
+start_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, height // 2 - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT)
+exit_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, height // 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+
 # color
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
+GRAY = (200, 200, 200)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 
 
 # game global parameter
@@ -106,7 +118,7 @@ def draw_board(game_board):
                 case 6:
                     pygame.draw.arc(
                         window,
-                        BLUE,
+                        BLUE,     
                         (((j + 0.5) * x), ((i + 0.5) * y), x, y),
                         PI / 2,
                         PI,
@@ -145,10 +157,50 @@ def draw_status(player):
         )
 
 
+# draw menu function
+def draw_menu():
+    window.fill(BLACK)
+    text_font = pygame.font.Font("freesansbold.ttf", 100)
+    text = text_font.render("PACMAN", True, YELLOW)
+    window.blit(text, (width // 2 - text.get_width() // 2, 100))
+    
+    pygame.draw.rect(window, BLUE, start_button)
+    start_text = font.render("Start", True, WHITE)
+    window.blit(start_text, (start_button.x + (start_button.width - start_text.get_width()) // 2, start_button.y + (start_button.height - start_text.get_height()) // 2))
+    
+    pygame.draw.rect(window, BLUE, exit_button)
+    exit_text = font.render("Exit", True, WHITE)
+    window.blit(exit_text, (exit_button.x + (exit_button.width - exit_text.get_width()) // 2, exit_button.y + (exit_button.height - exit_text.get_height()) // 2))
+
+    pass
+
+
+def menu():
+    while True:
+        draw_menu()
+        pygame.display.flip()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button.collidepoint(event.pos):
+                    return
+                if exit_button.collidepoint(event.pos):
+                    pygame.quit()
+                    exit()
+
+
 # main game function
 def main():
+    menu()
+
     run = True
     promise = [False, False, False, False]
+
+    ghost_threads: list[threading.Thread] = []
+    thread_start = False
 
     while run:
         timer.tick(fps)
@@ -158,29 +210,37 @@ def main():
 
         # player actions
         player.draw_player(window)
-        player.update()
+        player.update(ghosts)
         player.move()
-        player.cal_score()
+
         for ghost in ghosts:
             player.check_collision(ghost)
 
         # ghost actions
-        new_target = (player.x, player.y)
         for ghost in ghosts:
             ghost.draw_ghost(window)
-            ghost.update_path(new_target)
             ghost.move()
 
         # control
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                #  and player.x % 30 == 0 and player.y % 30 == 0
+            
+            #  and player.x % 30 == 0 and player.y % 30 == 0
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.can_move = True
+                    
                     for ghost in ghosts:
                         ghost.can_move = True
+                    
+                    if thread_start == False:
+                        for ghost in ghosts:
+                            update_path = threading.Thread(target=ghost.update_path, daemon=True)
+                            ghost_threads.append(update_path)
+                            update_path.start()
+                        thread_start = True
+
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     if player.direction == 0 or player.direction == 1:
                         player.set_direction(0)
@@ -229,6 +289,12 @@ def main():
         pygame.display.flip()
 
     pygame.quit()
+
+    for ghost in ghosts:
+        ghost.running = False
+    
+    for update_path in ghost_threads:
+        update_path.join()
 
 
 if __name__ == "__main__":

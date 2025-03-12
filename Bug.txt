@@ -1,0 +1,7 @@
+Ghost chưa check đụng nhau
+
+KHÔNG CHẠY THREAD CHUNG VỚI TRACEMALLOC
+
+Ghost ở trạng thái sợ, chạm vào pacman bị delay 1 khoảng thời gian mới sang trạng thái chết
+
+Ghost ở trạng thái bình thường, khi chạm vào pacman thì chết hết cả 3 mạng
