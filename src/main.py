@@ -18,6 +18,8 @@ BUTTON_WIDTH = 200
 BUTTON_HEIGHT = 100
 start_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, height // 2 - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT)
 exit_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, height // 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+levels = [f"Level {i+1}" for i in range(6)]
+selected_level = None
 
 # color
 BLACK = (0, 0, 0)
@@ -175,9 +177,29 @@ def draw_menu():
 
     pass
 
+# draw level selection screen function
+def draw_level_selection():
+    window.fill(BLACK)
+    text_font = pygame.font.Font("freesansbold.ttf", 50)
+    text = text_font.render("Select Level", True, YELLOW)
+    window.blit(text, (width // 2 - text.get_width() // 2, 100))
+
+    for i, level in enumerate(levels):
+        level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * (100 + 30), BUTTON_WIDTH, BUTTON_HEIGHT)
+        pygame.draw.rect(window, BLUE, level_button)
+        level_text = font.render(level, True, WHITE)
+        window.blit(level_text, (level_button.x + (BUTTON_WIDTH - level_text.get_width()) // 2, level_button.y + (BUTTON_HEIGHT - level_text.get_height()) // 2))
+
+# game menu function
 def menu():
+    global selected_level
+    level_selection = False
+
     while True:
-        draw_menu()
+        if level_selection:
+            draw_level_selection()
+        else:
+            draw_menu()
         pygame.display.flip()
         
         for event in pygame.event.get():
@@ -185,19 +207,36 @@ def menu():
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if start_button.collidepoint(event.pos):
-                    return
-                if exit_button.collidepoint(event.pos):
-                    pygame.quit()
-                    exit()
+                if not level_selection:
+                    if start_button.collidepoint(event.pos):
+                        level_selection = True
+            
+                    if exit_button.collidepoint(event.pos):
+                        pygame.quit()
+                        exit()
+                else:
+                     for i in range(len(levels)):
+                        level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+                        if level_button.collidepoint(event.pos):
+                            selected_level = i + 1
+                            return 
 
 # main game function
 def main():
+    global selected_level
+    #menu screen
     menu()
-    
+
+    # choose active ghosts for each levels
+    player.can_move = (selected_level == 6)
+    active_ghosts = []
+    if selected_level in {1, 2, 3, 4}:
+        active_ghosts.append(ghosts[selected_level - 1])
+    else:
+        active_ghosts = ghosts
+
     run = True
     promise = [False, False, False, False]
-
     while run:
         timer.tick(fps)
         window.fill(BLACK)
@@ -207,13 +246,14 @@ def main():
         # player actions
         player.draw_player(window)
         player.update(ghosts)
-        player.move()
+        if selected_level == 6:
+            player.move()
         for ghost in ghosts:
             player.check_collision(ghost)
 
         # ghost actions
         new_target = (player.x, player.y)
-        for ghost in ghosts:
+        for ghost in active_ghosts:
             ghost.draw_ghost(window)
             if ghost.dead:
                 new_target = (ghost.spawn_x, ghost.spawn_y)
@@ -278,7 +318,6 @@ def main():
         pygame.display.flip()
 
     pygame.quit()
-
 
 if __name__ == "__main__":
     main()

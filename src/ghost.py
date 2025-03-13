@@ -100,22 +100,43 @@ class Ghost:
             self.prev_target = new_target
 
     def move(self):
+        # if self.can_move:
+        #     if not self.path:
+        #         return
+
+        #     cur_x, cur_y = self.path[0]
+        #     target_x, target_y = grid_to_pixel(cur_x, cur_y)
+
+        #     speed = 2
+        #     if self.x < target_x:
+        #         self.x += speed
+        #     elif self.x > target_x:
+        #         self.x -= speed
+
+        #     if self.y < target_y:
+        #         self.y += speed
+        #     elif self.y > target_y:
+        #         self.y -= speed
+
+        #     if self.x == target_x and self.y == target_y:
+        #         self.path.pop(0)
+        #     if self.x == self.spawn_x and self.y == self.spawn_y:
+        #         self.dead = False
+        if not self.path:
+            return
         if self.can_move:
-            if not self.path:
-                return
 
             cur_x, cur_y = self.path[0]
             target_x, target_y = grid_to_pixel(cur_x, cur_y)
 
-            speed = 2
-            if self.x < target_x:
+            speed = 3
+            if self.x < target_x and self.y % 30 == 0:
                 self.x += speed
-            elif self.x > target_x:
+            elif self.x > target_x and self.y % 30 == 0:
                 self.x -= speed
-
-            if self.y < target_y:
+            elif self.y < target_y and self.x % 30 == 0:
                 self.y += speed
-            elif self.y > target_y:
+            elif self.y > target_y and self.x % 30 == 0:
                 self.y -= speed
 
             if self.x == target_x and self.y == target_y:

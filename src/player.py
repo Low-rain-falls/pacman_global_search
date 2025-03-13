@@ -59,7 +59,7 @@ class Player:
             elif self.x < -30:
                 self.x = 900
 
-            speed = 2
+            speed = 3
             if self.direction == 0:
                 if boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3:
                     self.x += speed
