@@ -61,16 +61,16 @@ class Player:
 
             speed = 5
             if self.direction == 0:
-                if boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3 or boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] > 10:
+                if boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3:
                     self.x += speed
             elif self.direction == 1:
-                if boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] < 3 or boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] > 10:
+                if boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] < 3:
                     self.x -= speed
             elif self.direction == 2:
-                if boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] < 3 or boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] > 10:
+                if boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] < 3:
                     self.y -= speed
             elif self.direction == 3:
-                if boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3 or boards[((self.y + 1) // 30) % 33][(self.x // 30) % 30] > 10:
+                if boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3:
                     self.y += speed
 
     def cal_score(self, ghosts):

@@ -99,7 +99,11 @@ class Ghost:
         if not self.path:
             return
         if not self.dead:
-            boards[self.y // 30][self.x // 30] = self.last_value
+            if self.last_value < 3:
+                boards[self.y // 30][self.x // 30] = self.last_value
+            else:
+                self.last_value = 0
+                boards[self.y // 30][self.x // 30] = self.last_value
         if self.can_move:
 
             cur_x, cur_y = self.path[0]
@@ -119,9 +123,13 @@ class Ghost:
                 self.path.pop(0)
             if self.x == self.spawn_x and self.y == self.spawn_y:
                 self.dead = False
-        if not self.dead:
-            self.last_value = boards[self.y // 30][self.x // 30]
-            boards[self.y // 30][self.x // 30] = 10 + self.id
+            if not self.dead:
+                if boards[self.y // 30][self.x // 30] < 3:
+                    self.last_value = boards[self.y // 30][self.x // 30]
+                else:
+                    self.last_value = 0
+                boards[self.y // 30][self.x // 30] = 10 + self.id
+
 
     def draw_ghost(self, window):
         if self.dead:
