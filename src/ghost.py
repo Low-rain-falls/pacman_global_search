@@ -60,12 +60,6 @@ class Ghost:
                     countNodes
                 )
             elif self.id == 2:
-                # new_path = dfs(
-                #     boards,
-                #     pixel_to_grid(self.x, self.y),
-                #     pixel_to_grid(new_target[0], new_target[1]),
-                #     countNodes
-                # )
                 new_path = dfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
@@ -94,28 +88,28 @@ class Ghost:
             self.performance.update("expandedNodes", countNodes[0])
             self.performance.update("memory",  sum(stat.size for stat in memRes if "search.py" in stat.traceback[0].filename))
             tracemalloc.stop()
-            self.performance.printPer(self.id)
+            # self.performance.printPer(self.id)
             if new_path != self.path:
+                new_path.pop(0)
                 self.path = new_path
             self.prev_target = new_target
 
     def move(self):
+        if not self.path:
+            return
         if self.can_move:
-            if not self.path:
-                return
 
             cur_x, cur_y = self.path[0]
             target_x, target_y = grid_to_pixel(cur_x, cur_y)
 
             speed = 2
-            if self.x < target_x:
+            if self.x < target_x and self.y % 30 == 0:
                 self.x += speed
-            elif self.x > target_x:
+            elif self.x > target_x and self.y % 30 == 0:
                 self.x -= speed
-
-            if self.y < target_y:
+            elif self.y < target_y and self.x % 30 == 0:
                 self.y += speed
-            elif self.y > target_y:
+            elif self.y > target_y and self.x % 30 == 0:
                 self.y -= speed
 
             if self.x == target_x and self.y == target_y:
