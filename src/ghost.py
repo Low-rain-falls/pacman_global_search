@@ -24,7 +24,7 @@ def pixel_to_grid(x, y):
     return (y // 30) % 33, (x // 30) % 30
 
 class Ghost:
-    def __init__(self, x, y, image, id):
+    def __init__(self, x, y, image, id, value):
         self.image = image
         self.x = x
         self.y = y
@@ -34,6 +34,7 @@ class Ghost:
         self.path = []
         self.can_be_eaten = False
         self.dead = False
+        self.last_value = value
         self.performance = Performance()
 
         self.spawn_x, self.spawn_y = x, y
@@ -59,7 +60,7 @@ class Ghost:
                     pixel_to_grid(new_target[0], new_target[1]),
                     countNodes
                 )
-            elif self.id == 2:
+            elif self.id == 2 and self.x % 90 == 0 and self.y % 90 == 0:
                 new_path = dfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
@@ -89,7 +90,7 @@ class Ghost:
             self.performance.update("memory",  sum(stat.size for stat in memRes if "search.py" in stat.traceback[0].filename))
             tracemalloc.stop()
             # self.performance.printPer(self.id)
-            if new_path != self.path:
+            if new_path and new_path != self.path:
                 new_path.pop(0)
                 self.path = new_path
             self.prev_target = new_target
@@ -97,6 +98,8 @@ class Ghost:
     def move(self):
         if not self.path:
             return
+        if not self.dead:
+            boards[self.y // 30][self.x // 30] = self.last_value
         if self.can_move:
 
             cur_x, cur_y = self.path[0]
@@ -116,7 +119,10 @@ class Ghost:
                 self.path.pop(0)
             if self.x == self.spawn_x and self.y == self.spawn_y:
                 self.dead = False
-            
+        if not self.dead:
+            self.last_value = boards[self.y // 30][self.x // 30]
+            boards[self.y // 30][self.x // 30] = 10 + self.id
+
     def draw_ghost(self, window):
         if self.dead:
             window.blit(dead_image, (self.x, self.y))

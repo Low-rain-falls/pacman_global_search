@@ -12,6 +12,12 @@ def print_board_with_path(board, path):
     for row in board_copy:
         print("   ".join(str(cell) for cell in row))
 
+def print_board(board):
+    print('=========================================================')
+    for row in board:
+        print(" ".join(map(str, row)))
+
+
 # dfs search
 # def dfs(boards, start, goal, countNodes, cur_visited = None):
 #     # initial current visited

@@ -59,18 +59,18 @@ class Player:
             elif self.x < -30:
                 self.x = 900
 
-            speed = 2
+            speed = 5
             if self.direction == 0:
-                if boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3:
+                if boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] < 3 or boards[(self.y // 30) % 33][(self.x // 30 + 1) % 30] > 10:
                     self.x += speed
             elif self.direction == 1:
-                if boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] < 3:
+                if boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] < 3 or boards[(self.y // 30) % 33][((self.x - 1) // 30) % 30] > 10:
                     self.x -= speed
             elif self.direction == 2:
-                if boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] < 3:
+                if boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] < 3 or boards[((self.y - 1) // 30) % 33][(self.x // 30) % 30] > 10:
                     self.y -= speed
             elif self.direction == 3:
-                if boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3:
+                if boards[((self.y) // 30 + 1) % 33][(self.x // 30) % 30] < 3 or boards[((self.y + 1) // 30) % 33][(self.x // 30) % 30] > 10:
                     self.y += speed
 
     def cal_score(self, ghosts):
@@ -86,7 +86,15 @@ class Player:
                 ghost.can_be_eaten = True
 
     def check_collision(self, ghost):
-        if self.x == ghost.x and self.y == ghost.y:
+        if -15 < self.x - ghost.x < 15 and -15 < self.y - ghost.y < 15 and not ghost.dead:
+            if boards[(self.y + 15) // 30][self.x // 30] > 10:
+                boards[(self.y + 15) // 30][self.x // 30] = 0
+            if boards[(self.y - 15) // 30][self.x // 30] > 10:
+                boards[(self.y - 15) // 30][self.x // 30] = 0
+            if boards[(self.y) // 30][(self.x + 15) // 30] > 10:
+                boards[(self.y) // 30][(self.x + 15) // 30] = 0
+            if boards[(self.y) // 30][(self.x - 15) // 30] > 10:
+                boards[(self.y) // 30][(self.x - 15) // 30] = 0
             if not self.powerup:
                 self.can_move = False
                 self.life -= 1
