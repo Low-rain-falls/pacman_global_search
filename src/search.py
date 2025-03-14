@@ -42,7 +42,7 @@ def dls(boards, start, end, limit_depth, countNodes):
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
                 stack.append(((nx, ny), path + [(nx, ny)], depth + 1))
     
     return None
