@@ -186,7 +186,7 @@ def draw_level_selection():
     window.blit(text, (width // 2 - text.get_width() // 2, 100))
 
     for i, level in enumerate(levels):
-        level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * (100 + 30), BUTTON_WIDTH, BUTTON_HEIGHT)
+        level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * (BUTTON_HEIGHT+ 30), BUTTON_WIDTH, BUTTON_HEIGHT)
         pygame.draw.rect(window, BLUE, level_button)
         level_text = font.render(level, True, WHITE)
         window.blit(level_text, (level_button.x + (BUTTON_WIDTH - level_text.get_width()) // 2, level_button.y + (BUTTON_HEIGHT - level_text.get_height()) // 2))
@@ -217,7 +217,7 @@ def menu():
                         exit()
                 else:
                      for i in range(len(levels)):
-                        level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+                        level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * (BUTTON_HEIGHT + 30), BUTTON_WIDTH, BUTTON_HEIGHT)
                         if level_button.collidepoint(event.pos):
                             selected_level = i + 1
                             return 
@@ -229,7 +229,6 @@ def main():
     menu()
 
     # choose active ghosts for each levels
-    player.can_move = (selected_level == 6)
     active_ghosts = []
     if selected_level in {1, 2, 3, 4}:
         active_ghosts.append(ghosts[selected_level - 1])
@@ -252,9 +251,6 @@ def main():
             player.move()
         for ghost in ghosts:
             player.check_collision(ghost)
-            if not player.can_move:
-                for ghost in ghosts:
-                    ghost.can_move = False
             
 
         # ghost actions
