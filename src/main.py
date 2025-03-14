@@ -251,8 +251,12 @@ def main():
             player.move()
         for ghost in ghosts:
             player.check_collision(ghost)
-            
 
+            # end game
+            if player.can_move == False and selected_level == 6:
+                ghost.can_move = False
+            
+        print_board(boards)
         # ghost actions
         new_target = (player.x, player.y)
         for ghost in active_ghosts:
