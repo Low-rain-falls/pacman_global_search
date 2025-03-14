@@ -239,7 +239,7 @@ def main():
     run = True
     promise = [False, False, False, False]
     while run:
-        print_board(boards)
+        # print_board(boards)
         timer.tick(fps)
         window.fill(BLACK)
         draw_board(game_board)
