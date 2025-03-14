@@ -222,18 +222,35 @@ def menu():
                             selected_level = i + 1
                             return 
 
-
 def draw_end_game():
-    # ve hinh end game o day nha dat
-    print("END GAME")
+    window.fill(BLACK)
+    text_font = pygame.font.Font("freesansbold.ttf", 100)
+    game_over_image = pygame.transform.scale(pygame.image.load("./assets/game_over.png"), (700, 300))
+    window.blit(game_over_image, (100, 100))
+
+    exit_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, height // 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT)
+    pygame.draw.rect(window, BLUE, exit_button)
+    exit_text = font.render("Exit", True, WHITE)
+    window.blit(exit_text, (exit_button.x + (exit_button.width - exit_text.get_width()) // 2, exit_button.y + (exit_button.height - exit_text.get_height()) // 2))
+
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if exit_button.collidepoint(event.pos):
+                    pygame.quit()
+                    exit()
 
 # check end game
-def isOver(ghosts):
-    for ghost in ghosts:
-        if ghost.can_move:
-            return
+# def isOver(ghosts):
+#     for ghost in ghosts:
+#         if ghost.can_move:
+#             return
     
-    draw_end_game()
+#     draw_end_game()
 
 
 # main game function
@@ -250,7 +267,6 @@ def main():
     else:
         active_ghosts = ghosts
 
-    isStart = False
     run = True
     promise = [False, False, False, False]
     while run:
@@ -271,7 +287,7 @@ def main():
             # end game
             if player.can_move == False and selected_level == 6:
                 ghost.can_move = False
-            
+
         # ghost actions
         new_target = (player.x, player.y)
         for ghost in active_ghosts:
@@ -280,6 +296,17 @@ def main():
                 new_target = (ghost.spawn_x, ghost.spawn_y)
             ghost.update_path(new_target)
             ghost.move()
+
+        # check end game
+        if selected_level < 6:
+            for ghost in active_ghosts:
+                if ghost.x == player.x and ghost.y == player.y:
+                    draw_end_game()
+                    run = False
+        else:
+            if player.life == 0:
+                draw_end_game()
+                run = False
 
         # control
         for event in pygame.event.get():
