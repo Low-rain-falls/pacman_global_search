@@ -2,6 +2,7 @@ import heapq
 
 # left - right - top - down
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+valid_path = {0, 1, 2, 9}
 
 def print_board_with_path(board, path):
     if path is None:
@@ -17,25 +18,48 @@ def print_board(board):
     for row in board:
         print(" ".join(map(str, row)))
 
-def dfs(boards, start, goal, countNodes):
+# dls search
+def dls(boards, start, end, limit_depth, countNodes):
+    rows = len(boards)
     cols = len(boards[0])
-    stack = [(start, [start])]
+
+    stack = [(start, [start], 0)]
     visited = set()
 
     while stack:
-        (x, y), path = stack.pop()
-        if (x, y) == goal:
-            return path
+        (x, y), path, depth = stack.pop()
 
-        if (x, y) in visited:
+        if (x, y) == end:
+            return path
+        
+        if depth >= limit_depth or (x, y) in visited:
             continue
+
         visited.add((x, y))
+    
         countNodes[0] += 1
 
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
-            if 0 <= ny < cols and (nx, ny) not in visited and boards[nx][ny] in {0, 1, 2, 9}:
-                stack.append(((nx, ny), path + [(nx, ny)]))
+
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
+                stack.append(((nx, ny), path + [(nx, ny)], depth + 1))
+    
+    return None
+
+
+# ids search
+def ids(boards, start, end, countNodes):
+    depth = 0
+    max_depth = len(boards) * len(boards[0])
+
+    while depth < max_depth:
+        path = dls(boards, start, end, depth, countNodes)
+        
+        if path:
+            return path
+        depth += 1
+
     return None
 
 # bfs search
@@ -59,7 +83,7 @@ def bfs(boards, start, end, countNodes):
             nx, ny = x + dx, y + dy
             
             if 0 <= ny < cols and (nx, ny) not in visited:
-                if boards[nx][ny] in {0, 1, 2, 9}:
+                if boards[nx][ny] in valid_path:
                     queue.append(((nx, ny), path + [(nx, ny)]))
                     visited.add((nx, ny))
                     countNodes[0] += 1
@@ -93,7 +117,7 @@ def ucs(boards, start, end, countNodes):
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9}:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
                 new_cost = cur_cost + 1
 
                 if (nx, ny) not in cost or new_cost < cost[(nx, ny)]:
@@ -133,7 +157,7 @@ def astar(boards, start, end, countNodes):
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9}:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
                 new_cost = f_score[(x, y)] + 1
 
                 if (nx, ny) not in f_score or new_cost < f_score[(nx, ny)]:

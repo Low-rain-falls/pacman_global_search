@@ -1,8 +1,8 @@
 import pygame
-import sys
 
-from search import print_board
+# import modules
 from board import boards
+
 # import objects
 from ghost import Ghost
 from player import Player
@@ -59,8 +59,8 @@ red_image = pygame.transform.scale(
 
 ghosts = [
     Ghost(60, 60, blue_image, 1, 1),
-    Ghost(810, 60, orange_image, 2, 1),
-    Ghost(60, 900, pink_image, 3, 1),
+    Ghost(810, 60, pink_image, 2, 1),
+    Ghost(60, 900, orange_image, 3, 1),
     Ghost(810, 900, red_image, 4, 1),
 ]
 
@@ -239,6 +239,7 @@ def isOver(ghosts):
 # main game function
 def main():
     global selected_level
+    
     #menu screen
     menu()
 
@@ -270,12 +271,7 @@ def main():
             # end game
             if player.can_move == False and selected_level == 6:
                 ghost.can_move = False
-                if isStart:
-                    isOver(ghosts)
-
-                
             
-        # print_board(boards) 
         # ghost actions
         new_target = (player.x, player.y)
         for ghost in active_ghosts:

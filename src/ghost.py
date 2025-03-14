@@ -3,7 +3,7 @@ import time
 import tracemalloc
 
 from board import boards
-from search import astar, bfs, dfs, ucs
+from search import astar, bfs, ids, ucs
 from performance import Performance
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -61,7 +61,7 @@ class Ghost:
                     countNodes
                 )
             elif self.id == 2 and self.x % 90 == 0 and self.y % 90 == 0:
-                new_path = dfs(
+                new_path = ids(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(new_target[0], new_target[1]),
@@ -105,11 +105,10 @@ class Ghost:
                 self.last_value = 0
                 boards[self.y // 30][self.x // 30] = self.last_value
         if self.can_move:
-
             cur_x, cur_y = self.path[0]
             target_x, target_y = grid_to_pixel(cur_x, cur_y)
 
-            speed = 3
+            speed = 2
             if self.x < target_x and self.y % 30 == 0:
                 self.x += speed
             elif self.x > target_x and self.y % 30 == 0:
