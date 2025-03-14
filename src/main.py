@@ -222,6 +222,20 @@ def menu():
                             selected_level = i + 1
                             return 
 
+
+def draw_end_game():
+    # ve hinh end game o day nha dat
+    print("END GAME")
+
+# check end game
+def isOver(ghosts):
+    for ghost in ghosts:
+        if ghost.can_move:
+            return
+    
+    draw_end_game()
+
+
 # main game function
 def main():
     global selected_level
@@ -235,6 +249,7 @@ def main():
     else:
         active_ghosts = ghosts
 
+    isStart = False
     run = True
     promise = [False, False, False, False]
     while run:
@@ -255,8 +270,12 @@ def main():
             # end game
             if player.can_move == False and selected_level == 6:
                 ghost.can_move = False
+                if isStart:
+                    isOver(ghosts)
+
+                
             
-        print_board(boards)
+        # print_board(boards) 
         # ghost actions
         new_target = (player.x, player.y)
         for ghost in active_ghosts:
@@ -274,6 +293,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.can_move = True
+                    isStart = True
                     for ghost in ghosts:
                         ghost.can_move = True
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
