@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+from search import print_board
 from board import boards
 # import objects
 from ghost import Ghost
@@ -57,10 +58,10 @@ red_image = pygame.transform.scale(
 )
 
 ghosts = [
-    Ghost(60, 60, blue_image, 1),
-    Ghost(810, 60, orange_image, 2),
-    Ghost(60, 900, pink_image, 3),
-    Ghost(810, 900, red_image, 4),
+    Ghost(60, 60, blue_image, 1, 1),
+    Ghost(810, 60, orange_image, 2, 1),
+    Ghost(60, 900, pink_image, 3, 1),
+    Ghost(810, 900, red_image, 4, 1),
 ]
 
 
@@ -238,6 +239,7 @@ def main():
     run = True
     promise = [False, False, False, False]
     while run:
+        print_board(boards)
         timer.tick(fps)
         window.fill(BLACK)
         draw_board(game_board)
@@ -250,6 +252,10 @@ def main():
             player.move()
         for ghost in ghosts:
             player.check_collision(ghost)
+            if not player.can_move:
+                for ghost in ghosts:
+                    ghost.can_move = False
+            
 
         # ghost actions
         new_target = (player.x, player.y)

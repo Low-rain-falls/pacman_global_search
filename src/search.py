@@ -12,6 +12,36 @@ def print_board_with_path(board, path):
     for row in board_copy:
         print("   ".join(str(cell) for cell in row))
 
+def print_board(board):
+    print('=========================================================')
+    for row in board:
+        print(" ".join(map(str, row)))
+
+
+# dfs search
+# def dfs(boards, start, goal, countNodes, cur_visited = None):
+#     # initial current visited
+#     if cur_visited is None:
+#         cur_visited = set()
+
+#     # return goal
+#     if start == goal:
+#         return [start]
+
+#     # update current_visited
+#     cur_visited.add((start[0], start[1]))
+#     countNodes[0] += 1
+#     cols = len(boards[0])
+
+#     # check path
+#     for dx, dy in direction:
+#         nx, ny = start[0] + dx, start[1] + dy
+#         if 0 <= ny < cols and boards[nx][ny] in {0, 1, 2, 9} and (nx, ny) not in cur_visited:
+#             path = dfs(boards, (nx, ny), goal, countNodes, cur_visited)
+#             if path:
+#                 return [(start[0], start[1])] + path
+#     cur_visited.remove((start[0], start[1]))
+#     return None
 def dfs(boards, start, goal, countNodes):
     cols = len(boards[0])
     stack = [(start, [start])]

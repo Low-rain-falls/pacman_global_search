@@ -86,7 +86,15 @@ class Player:
                 ghost.can_be_eaten = True
 
     def check_collision(self, ghost):
-        if self.x == ghost.x and self.y == ghost.y:
+        if -15 < self.x - ghost.x < 15 and -15 < self.y - ghost.y < 15 and not ghost.dead:
+            if boards[(self.y + 15) // 30][self.x // 30] > 10:
+                boards[(self.y + 15) // 30][self.x // 30] = 0
+            if boards[(self.y - 15) // 30][self.x // 30] > 10:
+                boards[(self.y - 15) // 30][self.x // 30] = 0
+            if boards[(self.y) // 30][(self.x + 15) // 30] > 10:
+                boards[(self.y) // 30][(self.x + 15) // 30] = 0
+            if boards[(self.y) // 30][(self.x - 15) // 30] > 10:
+                boards[(self.y) // 30][(self.x - 15) // 30] = 0
             if not self.powerup:
                 self.can_move = False
                 self.life -= 1
