@@ -282,20 +282,19 @@ def main():
         if selected_level == 6:
             player.move()
         for ghost in ghosts:
-            player.check_collision(ghost)
-            if selected_level == 6 and not player.powerup:
-                if ghost.x == player.x and ghost.y == player.y:
-                        player.life -= 1
-                        if player.life > 0:
-                            player.x = 450
-                            player.y = 720
-                            player.set_direction(0)
+            if player.check_collision(ghost):
+                if selected_level == 6:
+                    player.life -= 1
+                    if player.life > 0:
+                        player.x = 450
+                        player.y = 720
+                        player.set_direction(0)
 
-                            for ghost in active_ghosts:
-                                ghost.x = ghost.spawn_x
-                                ghost.y = ghost.spawn_y
-                                ghost.can_move = False
-                            break
+                        for ghost in active_ghosts:
+                            ghost.x = ghost.spawn_x
+                            ghost.y = ghost.spawn_y
+                            ghost.can_move = False
+                        break
 
             # end game
             if player.can_move == False and selected_level == 6:

@@ -97,6 +97,7 @@ class Player:
                 boards[(self.y) // 30][(self.x - 15) // 30] = 0
             if not self.powerup:
                 self.can_move = False
+                return True
             elif self.powerup and ghost.can_be_eaten:
                 ghost.dead = True
                 ghost.can_be_eaten = False
