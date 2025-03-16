@@ -57,8 +57,14 @@ red_image = pygame.transform.scale(
     pygame.image.load(f"./assets/ghost_images/red.png"), (30, 30)
 )
 
+# case 1: 60, 60
+# case 2: 810, 60
+# case 3: 810, 900
+# case 4: 60, 900
+# case 5: 420, 450
+
 ghosts = [
-    Ghost(60, 60, blue_image, 1, 1),
+    Ghost(420, 450, blue_image, 1, boards[450//30][420//30]),
     Ghost(810, 60, pink_image, 2, 1),
     Ghost(60, 900, orange_image, 3, 1),
     Ghost(810, 900, red_image, 4, 1),
@@ -157,7 +163,7 @@ def draw_status(player):
         window.blit(
             pygame.transform.scale(player.images[0], (30, 30)), (650 + i * 40, 985)
         )
-    
+
     if player.powerup:
         pygame.draw.circle(window, BLUE, (150, 1000), 10)
 
@@ -167,11 +173,11 @@ def draw_menu():
     text_font = pygame.font.Font("freesansbold.ttf", 100)
     text = text_font.render("PACMAN", True, YELLOW)
     window.blit(text, (width // 2 - text.get_width() // 2, 100))
-    
+
     pygame.draw.rect(window, BLUE, start_button)
     start_text = font.render("Start", True, WHITE)
     window.blit(start_text, (start_button.x + (start_button.width - start_text.get_width()) // 2, start_button.y + (start_button.height - start_text.get_height()) // 2))
-    
+
     pygame.draw.rect(window, BLUE, exit_button)
     exit_text = font.render("Exit", True, WHITE)
     window.blit(exit_text, (exit_button.x + (exit_button.width - exit_text.get_width()) // 2, exit_button.y + (exit_button.height - exit_text.get_height()) // 2))
@@ -202,7 +208,7 @@ def menu():
         else:
             draw_menu()
         pygame.display.flip()
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -211,7 +217,7 @@ def menu():
                 if not level_selection:
                     if start_button.collidepoint(event.pos):
                         level_selection = True
-            
+
                     if exit_button.collidepoint(event.pos):
                         pygame.quit()
                         exit()
@@ -220,7 +226,7 @@ def menu():
                         level_button = pygame.Rect(width // 2 - BUTTON_WIDTH // 2, 250 + i * (BUTTON_HEIGHT + 30), BUTTON_WIDTH, BUTTON_HEIGHT)
                         if level_button.collidepoint(event.pos):
                             selected_level = i + 1
-                            return 
+                            return
 
 def draw_end_game():
     window.fill(BLACK)
@@ -249,14 +255,14 @@ def draw_end_game():
 #     for ghost in ghosts:
 #         if ghost.can_move:
 #             return
-    
+
 #     draw_end_game()
 
 
 # main game function
 def main():
     global selected_level
-    
+
     #menu screen
     menu()
 

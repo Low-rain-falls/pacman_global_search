@@ -100,7 +100,7 @@ class Ghost:
         if not self.path:
             return
         if not self.dead:
-            if self.last_value < 3:
+            if self.last_value < 3 or self.last_value == 9:
                 boards[self.y // 30][self.x // 30] = self.last_value
             else:
                 self.last_value = 0
@@ -124,7 +124,7 @@ class Ghost:
             if self.x == self.spawn_x and self.y == self.spawn_y:
                 self.dead = False
             if not self.dead:
-                if boards[self.y // 30][self.x // 30] < 3:
+                if boards[self.y // 30][self.x // 30] < 3 or boards[self.y // 30][self.x // 30] == 9:
                     self.last_value = boards[self.y // 30][self.x // 30]
                 else:
                     self.last_value = 0
