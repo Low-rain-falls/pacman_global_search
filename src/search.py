@@ -22,18 +22,8 @@ def get_priority_directions(start, end):
     x, y = start
     ex, ey = end
     direction.sort(key=lambda d: abs((x + d[0]) - ex) + abs((y + d[1]) - ey))
-    
+
     return direction
-
-
-def is_dead_end(boards, x, y, goal):
-    count = 0
-    for dx, dy in get_priority_directions((x, y), goal):
-        nx, ny = x + dx, y + dy
-        if 0 <= nx < len(boards) and 0 <= ny < len(boards[0]) and boards[nx][ny] in valid_path:
-            count += 1
-    return count <= 1
-
 
 # dfs search
 def dfs(boards, start, end, countNodes):
@@ -49,7 +39,7 @@ def dfs(boards, start, end, countNodes):
 
         if (x, y) == end:
             return path
-        
+
         if (x, y) in visited:
             continue
 
@@ -60,52 +50,9 @@ def dfs(boards, start, end, countNodes):
 
             if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
                 stack.append(((nx, ny), path + [(nx, ny)]))
-    
-    return None
-
-# dls search
-def dls(boards, start, end, limit_depth, countNodes):
-    rows = len(boards)
-    cols = len(boards[0])
-
-    stack = [(start, [start], 0)]
-    visited = set()
-
-    while stack:
-        (x, y), path, depth = stack.pop()
-
-        if (x, y) == end:
-            return path
-        
-        if depth >= limit_depth or (x, y) in visited or is_dead_end(boards, x, y, end):
-            continue
-
-        visited.add((x, y))
-    
-        countNodes[0] += 1
-
-        for dx, dy in get_priority_directions((x, y), end):
-            nx, ny = x + dx, y + dy
-
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
-                stack.append(((nx, ny), path + [(nx, ny)], depth + 1))
-    
-    return None
-
-
-# ids search
-def ids(boards, start, end, countNodes):
-    depth = 0
-    max_depth = (abs(start[0] - end[0]) + abs(start[1] - end[1])) * 2
-
-    while depth < max_depth:
-        path = dls(boards, start, end, depth, countNodes)
-        
-        if path:
-            return path
-        depth += 2
 
     return None
+
 
 # bfs search
 def bfs(boards, start, end, countNodes):
@@ -118,21 +65,20 @@ def bfs(boards, start, end, countNodes):
     visited = set()
     visited.add(start)
     countNodes[0] += 1
-    
+
     while queue:
         (x, y), path = queue.pop(0)
-        
+
         if (x, y) == end:
             return path
-        
+
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
-            
-            if 0 <= nx < rows and 0 <= ny < cols and (nx, ny) not in visited:
-                if boards[nx][ny] in valid_path:
-                    queue.append(((nx, ny), path + [(nx, ny)]))
-                    visited.add((nx, ny))
-                    countNodes[0] += 1
+
+            if 0 <= nx < rows and 0 <= ny < cols and (nx, ny) not in visited and boards[nx][ny] in valid_path:
+                queue.append(((nx, ny), path + [(nx, ny)]))
+                visited.add((nx, ny))
+                countNodes[0] += 1
 
     return None
 
@@ -163,14 +109,14 @@ def ucs(boards, start, end, countNodes):
         for dx, dy in get_priority_directions((x, y), end):
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
                 new_cost = cur_cost + 1
 
                 if (nx, ny) not in cost or new_cost < cost[(nx, ny)]:
                     cost[(nx, ny)] = new_cost
                     heapq.heappush(pq, (new_cost, (nx, ny)))
                     parent[(nx, ny)] = (x, y)
-    
+
     return None
 
 def heuristic (a, b):
@@ -203,7 +149,7 @@ def astar(boards, start, end, countNodes):
         for dx, dy in get_priority_directions((x, y), end):
             nx, ny = x + dx, y + dy
 
-            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
                 new_cost = f_score[(x, y)] + 1
 
                 if (nx, ny) not in f_score or new_cost < f_score[(nx, ny)]:
@@ -211,7 +157,7 @@ def astar(boards, start, end, countNodes):
                     f_score[(nx, ny)] = new_cost
                     g_score[(nx, ny)] = new_cost + heuristic((nx, ny), end)
                     heapq.heappush(pq, (g_score[(nx, ny)], (nx, ny)))
-    
+
     return None
 
 # demo

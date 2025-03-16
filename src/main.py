@@ -63,8 +63,11 @@ red_image = pygame.transform.scale(
 # case 4: 60, 900
 # case 5: 420, 450
 
+_x = 420
+_y = 450
+
 ghosts = [
-    Ghost(420, 450, blue_image, 1, boards[450//30][420//30]),
+    Ghost(60, 60, blue_image, 1, 1),
     Ghost(810, 60, pink_image, 2, 1),
     Ghost(60, 900, orange_image, 3, 1),
     Ghost(810, 900, red_image, 4, 1),

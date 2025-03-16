@@ -3,7 +3,7 @@ import time
 import tracemalloc
 
 from board import boards
-from search import astar, bfs, ids, ucs, dfs
+from search import astar, bfs, ucs, dfs
 from performance import Performance
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
