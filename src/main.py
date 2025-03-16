@@ -39,6 +39,7 @@ timer = pygame.time.Clock()
 fps = 60
 font = pygame.font.Font("freesansbold.ttf", 20)
 game_board = boards
+original_board = [row[:] for row in game_board]
 
 # player object
 player = Player(450, 720)
@@ -64,10 +65,10 @@ red_image = pygame.transform.scale(
 # case 5: 420, 450
 
 ghosts = [
-    Ghost(60, 60, blue_image, 1, 1),
-    Ghost(810, 60, pink_image, 2, 1),
-    Ghost(60, 900, orange_image, 3, 1),
-    Ghost(810, 900, red_image, 4, 1),
+    Ghost(60, 60, blue_image, 1),
+    Ghost(810, 60, pink_image, 2),
+    Ghost(60, 900, orange_image, 3),
+    Ghost(810, 900, red_image, 4),
 ]
 
 
@@ -250,15 +251,6 @@ def draw_end_game():
                     pygame.quit()
                     exit()
 
-# check end game
-# def isOver(ghosts):
-#     for ghost in ghosts:
-#         if ghost.can_move:
-#             return
-
-#     draw_end_game()
-
-
 # main game function
 def main():
     global selected_level
@@ -292,10 +284,11 @@ def main():
             if player.check_collision(ghost):
                 if selected_level == 6:
                     player.life -= 1
-                    for by in range(len(game_board)):
-                        for bx in range(len(game_board[by])):
-                            if game_board[by][bx] > 10:
-                                game_board[by][bx] = 1
+                    for i in range(len(game_board)):
+                        for j in range(len(game_board[i])):
+                            if original_board[i][j] in {1, 2} and game_board[i][j] == 0:
+                                continue
+                            game_board[i][j] = original_board[i][j]
                     if player.life > 0:
                         player.x = 450
                         player.y = 720
@@ -336,7 +329,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                #  and player.x % 30 == 0 and player.y % 30 == 0
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.can_move = True

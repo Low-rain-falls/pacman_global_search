@@ -24,7 +24,7 @@ def pixel_to_grid(x, y):
     return (y // 30) % 33, (x // 30) % 30
 
 class Ghost:
-    def __init__(self, x, y, image, id, value):
+    def __init__(self, x, y, image, id):
         self.image = image
         self.x = x
         self.y = y
@@ -34,7 +34,7 @@ class Ghost:
         self.path = []
         self.can_be_eaten = False
         self.dead = False
-        self.last_value = value
+        self.last_value = boards[pixel_to_grid(self.x, self.y)[0]][pixel_to_grid(self.x, self.y)[1]]
         self.performance = Performance()
         self.spawn_x, self.spawn_y = x, y
 

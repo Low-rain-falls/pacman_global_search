@@ -4,20 +4,6 @@ import heapq
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 valid_path = {0, 1, 2, 9}
 
-def print_board_with_path(board, path):
-    if path is None:
-        return
-    board_copy = [row[:] for row in board]
-    for x, y in path:
-        board_copy[x][y] = '*'  # mark the path by '*'
-    for row in board_copy:
-        print("   ".join(str(cell) for cell in row))
-
-def print_board(board):
-    print('=========================================================')
-    for row in board:
-        print(" ".join(map(str, row)))
-
 def get_priority_directions(start, end):
     x, y = start
     ex, ey = end
@@ -159,37 +145,3 @@ def astar(boards, start, end, countNodes):
                     heapq.heappush(pq, (g_score[(nx, ny)], (nx, ny)))
 
     return None
-
-# demo
-
-# grid = [
-#     [3, 3, 3, 3, 3, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 1, 1, 1, 1, 3],
-#     [3, 3, 3, 3, 3, 3]
-# ]
-
-# start = (2, 3)
-# end = (8, 4)
-
-# print("DFS path")
-# dfs_path = dfs(grid, start, end)
-# print_board_with_path(grid, dfs_path)
-
-# print("BFS path")
-# bfs_path = bfs(grid, start, end)
-# print_board_with_path(grid, bfs_path)
-
-# print("UCS path")
-# ucs_path = ucs(grid, start, end)
-# print_board_with_path(grid, ucs_path)
-
-# print("A* path")
-# astar_path = astar(grid, start, end)
-# print_board_with_path(grid, astar_path)
