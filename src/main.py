@@ -269,6 +269,7 @@ def main():
 
     run = True
     promise = [False, False, False, False]
+
     while run:
         # print_board(boards)
         timer.tick(fps)
@@ -285,6 +286,10 @@ def main():
             if player.check_collision(ghost):
                 if selected_level == 6:
                     player.life -= 1
+                    for by in range(len(game_board)):
+                        for bx in range(len(game_board[by])):
+                            if game_board[by][bx] > 10:
+                                game_board[by][bx] = 1
                     if player.life > 0:
                         player.x = 450
                         player.y = 720

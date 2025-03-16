@@ -3,7 +3,7 @@ import time
 import tracemalloc
 
 from board import boards
-from search import astar, bfs, ids, ucs
+from search import astar, bfs, ids, ucs, dfs
 from performance import Performance
 
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -30,29 +30,30 @@ class Ghost:
         self.y = y
         self.id = id
         self.can_move = False
-        self.prev_target = None
+        self.target = None
         self.path = []
         self.can_be_eaten = False
         self.dead = False
         self.last_value = value
         self.performance = Performance()
-
         self.spawn_x, self.spawn_y = x, y
 
     def update_path(self, new_target):
-        if self.prev_target != new_target:
+        if self.target != new_target:
             countNodes = [0]
             tracemalloc.start()
 
             memStart = tracemalloc.take_snapshot()
             startTime = time.perf_counter_ns()
+            
             if self.dead:
-                new_path = ucs(
+                new_path = astar(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(self.spawn_x, self.spawn_y),
                     countNodes
                 )
+             
             elif self.id == 1:
                 new_path = bfs(
                     boards,
@@ -61,12 +62,13 @@ class Ghost:
                     countNodes
                 )
             elif self.id == 2 and self.x % 90 == 0 and self.y % 90 == 0:
-                new_path = ids(
+                new_path = dfs(
                     boards,
                     pixel_to_grid(self.x, self.y),
                     pixel_to_grid(new_target[0], new_target[1]),
                     countNodes
                 )
+                print("IDS path: ", new_path)
             elif self.id == 3:
                 new_path = ucs(
                     boards,
@@ -93,7 +95,7 @@ class Ghost:
             if new_path and new_path != self.path:
                 new_path.pop(0)
                 self.path = new_path
-            self.prev_target = new_target
+            self.target = new_target
 
     def move(self):
         if not self.path:

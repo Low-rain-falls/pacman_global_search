@@ -1,6 +1,6 @@
 import heapq
 
-# left - right - top - down
+# left - right - up - down
 direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 valid_path = {0, 1, 2, 9}
 
@@ -18,6 +18,51 @@ def print_board(board):
     for row in board:
         print(" ".join(map(str, row)))
 
+def get_priority_directions(start, end):
+    x, y = start
+    ex, ey = end
+    direction.sort(key=lambda d: abs((x + d[0]) - ex) + abs((y + d[1]) - ey))
+    
+    return direction
+
+
+def is_dead_end(boards, x, y, goal):
+    count = 0
+    for dx, dy in get_priority_directions((x, y), goal):
+        nx, ny = x + dx, y + dy
+        if 0 <= nx < len(boards) and 0 <= ny < len(boards[0]) and boards[nx][ny] in valid_path:
+            count += 1
+    return count <= 1
+
+
+# dfs search
+def dfs(boards, start, end, countNodes):
+    rows = len(boards)
+    cols = len(boards[0])
+
+    stack = [(start, [start])]
+    visited = set()
+
+    while stack:
+        (x, y), path = stack.pop()
+        countNodes[0] += 1
+
+        if (x, y) == end:
+            return path
+        
+        if (x, y) in visited:
+            continue
+
+        visited.add((x, y))
+
+        for dx, dy in get_priority_directions((x, y), end):
+            nx, ny = x + dx, y + dy
+
+            if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
+                stack.append(((nx, ny), path + [(nx, ny)]))
+    
+    return None
+
 # dls search
 def dls(boards, start, end, limit_depth, countNodes):
     rows = len(boards)
@@ -32,14 +77,14 @@ def dls(boards, start, end, limit_depth, countNodes):
         if (x, y) == end:
             return path
         
-        if depth >= limit_depth or (x, y) in visited:
+        if depth >= limit_depth or (x, y) in visited or is_dead_end(boards, x, y, end):
             continue
 
         visited.add((x, y))
     
         countNodes[0] += 1
 
-        for dx, dy in direction:
+        for dx, dy in get_priority_directions((x, y), end):
             nx, ny = x + dx, y + dy
 
             if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path and (nx, ny) not in visited:
@@ -51,19 +96,20 @@ def dls(boards, start, end, limit_depth, countNodes):
 # ids search
 def ids(boards, start, end, countNodes):
     depth = 0
-    max_depth = len(boards) * len(boards[0])
+    max_depth = (abs(start[0] - end[0]) + abs(start[1] - end[1])) * 2
 
     while depth < max_depth:
         path = dls(boards, start, end, depth, countNodes)
         
         if path:
             return path
-        depth += 1
+        depth += 2
 
     return None
 
 # bfs search
 def bfs(boards, start, end, countNodes):
+    rows = len(boards)
     cols = len(boards[0])
 
     # queue has child and their path
@@ -82,7 +128,7 @@ def bfs(boards, start, end, countNodes):
         for dx, dy in direction:
             nx, ny = x + dx, y + dy
             
-            if 0 <= ny < cols and (nx, ny) not in visited:
+            if 0 <= nx < rows and 0 <= ny < cols and (nx, ny) not in visited:
                 if boards[nx][ny] in valid_path:
                     queue.append(((nx, ny), path + [(nx, ny)]))
                     visited.add((nx, ny))
@@ -114,7 +160,7 @@ def ucs(boards, start, end, countNodes):
             path.reverse()
             return path
 
-        for dx, dy in direction:
+        for dx, dy in get_priority_directions((x, y), end):
             nx, ny = x + dx, y + dy
 
             if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
@@ -154,7 +200,7 @@ def astar(boards, start, end, countNodes):
             path.reverse()
             return path
 
-        for dx, dy in direction:
+        for dx, dy in get_priority_directions((x, y), end):
             nx, ny = x + dx, y + dy
 
             if 0 <= nx < rows and 0 <= ny < cols and boards[nx][ny] in valid_path:
