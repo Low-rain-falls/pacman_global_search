@@ -61,7 +61,6 @@ python src/main.py
 3️⃣ **Control Pac-Man (if implemented):**
 
 - Arrow keys to move
-- Esc to quit
 
 ## 📊 Performance Evaluation
 
@@ -75,5 +74,3 @@ python src/main.py
 ## 🎥 Demo
 
 📺 [Watch the demo here](#)
-
-## 📜 Contributors
