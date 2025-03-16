@@ -1,4 +1,4 @@
-# 🟡 AI Project 1: Search - Pac-Man Ghosts 🏆
+# AI Project 1: Search - Pac-Man Ghosts
 
 ## 📌 Introduction
 
@@ -29,17 +29,31 @@ The goal is to develop intelligent ghost behaviors using **BFS, DFS, UCS, and A*
 
 ```plaintext
 📦 AI-Project-Search
- ┣ 📂 source
- ┃ ┣ 📜 main.py          # Entry point
- ┃ ┣ 📜 bfs.py           # BFS implementation
- ┃ ┣ 📜 dfs.py           # DFS implementation
- ┃ ┣ 📜 ucs.py           # UCS implementation
- ┃ ┣ 📜 astar.py         # A* implementation
- ┃ ┗ 📜 game.py          # Game mechanics & rendering
- ┣ 📜 README.md          # This documentation
- ┣ 📜 requirements.txt    # Dependencies
- ┣ 📜 Report.pdf         # Project report
- ┗ 📜 Demo.mp4           # Demonstration video
+ ┣ 📂 assets
+ ┃ ┣ 📜 game_over.png      # Game over screen
+ ┃ ┣ 📂 ghost_images       # Ghost sprites
+ ┃ ┃ ┣ 📜 blue.png
+ ┃ ┃ ┣ 📜 dead.png
+ ┃ ┃ ┣ 📜 orange.png
+ ┃ ┃ ┣ 📜 pink.png
+ ┃ ┃ ┣ 📜 powerup.png
+ ┃ ┃ ┗ 📜 red.png
+ ┃ ┣ 📂 player_images      # Player sprites
+ ┃ ┃ ┣ 📜 1.png
+ ┃ ┃ ┣ 📜 2.png
+ ┃ ┃ ┣ 📜 3.png
+ ┃ ┃ ┗ 📜 4.png
+ ┣ 📜 README.md            # Project documentation
+ ┣ 📜 requirements.txt      # Dependencies
+ ┣ 📂 src
+ ┃ ┣ 📜 main.py            # Entry point
+ ┃ ┣ 📜 board.py           # Game board logic
+ ┃ ┣ 📜 ghost.py           # Ghost behavior
+ ┃ ┣ 📜 player.py          # Player mechanics
+ ┃ ┣ 📜 search.py          # Search algorithms (BFS, DFS, A*, UCS)
+ ┃ ┗ 📜 performance.py     # Performance evaluation
+ ┣ 📜 Report.pdf
+ ┗ 📜 Demo.mp4
 ```
 
 ## 🎮 How to Run
