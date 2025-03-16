@@ -45,7 +45,7 @@ class Ghost:
 
             memStart = tracemalloc.take_snapshot()
             startTime = time.perf_counter_ns()
-            
+
             if self.dead:
                 new_path = astar(
                     boards,
@@ -53,7 +53,7 @@ class Ghost:
                     pixel_to_grid(self.spawn_x, self.spawn_y),
                     countNodes
                 )
-             
+
             elif self.id == 1:
                 new_path = bfs(
                     boards,
@@ -68,7 +68,6 @@ class Ghost:
                     pixel_to_grid(new_target[0], new_target[1]),
                     countNodes
                 )
-                print("IDS path: ", new_path)
             elif self.id == 3:
                 new_path = ucs(
                     boards,
@@ -91,7 +90,7 @@ class Ghost:
             self.performance.update("expandedNodes", countNodes[0])
             self.performance.update("memory",  sum(stat.size for stat in memRes if "search.py" in stat.traceback[0].filename))
             tracemalloc.stop()
-            # self.performance.printPer(self.id)
+            self.performance.printPer(self.id)
             if new_path and new_path != self.path:
                 new_path.pop(0)
                 self.path = new_path
