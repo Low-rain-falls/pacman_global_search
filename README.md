@@ -62,15 +62,6 @@ python src/main.py
 
 - Arrow keys to move
 
-## 📊 Performance Evaluation
-
-| Algorithm  | Search Time | Memory Usage | Expanded Nodes |
-|------------|------------|--------------|----------------|
-| BFS        | X ms       | Y MB         | Z              |
-| DFS        | X ms       | Y MB         | Z              |
-| UCS        | X ms       | Y MB         | Z              |
-| A*         | X ms       | Y MB         | Z              |
-
 ## 🎥 Demo
 
 📺 [Watch the demo here](#)
