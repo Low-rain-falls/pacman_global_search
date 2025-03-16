@@ -308,6 +308,8 @@ def main():
         new_target = (player.x, player.y)
         for ghost in active_ghosts:
             ghost.draw_ghost(window)
+            if ghost.dead:
+                new_target = (ghost.spawn_x, ghost.spawn_y)
             ghost.update_path(new_target)
             ghost.move()
 
