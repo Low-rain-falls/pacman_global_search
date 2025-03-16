@@ -63,9 +63,6 @@ red_image = pygame.transform.scale(
 # case 4: 60, 900
 # case 5: 420, 450
 
-_x = 420
-_y = 450
-
 ghosts = [
     Ghost(60, 60, blue_image, 1, 1),
     Ghost(810, 60, pink_image, 2, 1),
